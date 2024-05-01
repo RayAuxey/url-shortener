@@ -33,6 +33,26 @@ const addLinkSchema = z.object({
 Bun.serve({
 	port: 42069,
 	development: true,
+	async fetch(req) {
+		const h = handler(req);
+		const { endpoint, json, searchParams } = h;
+
+		if (endpoint("POST", "/add")) {
+			const body = (await req.json()) as z.infer<typeof addLinkSchema>;
+			try {
+				addLinkSchema.parse(body);
+			} catch (error) {
+				return json(
+					{
+						error: (error as ZodError).errors[0].message,
+					},
+					400,
+				);
+			}
+			addLink.run(body.id ?? generateId(), body.url);
+			return new Response("Successfully added the link!");
+		}
+	},
 });
 
 function generateId() {
