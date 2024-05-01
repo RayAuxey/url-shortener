@@ -72,6 +72,19 @@ Bun.serve({
 			deleteLink.run(id);
 			return new Response("Successfully deleted the link!");
 		}
+
+		const id = h.lastPart;
+		if (!id) {
+			return new Response("No ID provided", { status: 400 });
+		}
+
+		const link = getLink.get(id) as LinkQueryResult;
+
+		if (!link) {
+			return new Response("Not Found", { status: 404 });
+		}
+
+		return Response.redirect(link.url, 301);
 	},
 });
 
