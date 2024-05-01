@@ -52,6 +52,12 @@ Bun.serve({
 			addLink.run(body.id ?? generateId(), body.url);
 			return new Response("Successfully added the link!");
 		}
+
+		if (endpoint("GET", "/links")) {
+			const allLinks = getAllLinks.all() as Link[];
+			return json(allLinks);
+		}
+
 	},
 });
 
