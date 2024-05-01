@@ -29,6 +29,12 @@ const addLinkSchema = z.object({
 	id: z.string().optional(),
 	url: z.string().url(),
 });
+
+Bun.serve({
+	port: 42069,
+	development: true,
+});
+
 function generateId() {
 	return Math.random().toString(36).slice(2, 8); // 6 characters
 }
