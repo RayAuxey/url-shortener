@@ -58,6 +58,20 @@ Bun.serve({
 			return json(allLinks);
 		}
 
+		if (endpoint("DELETE", "/delete")) {
+			const id = searchParams.get("id");
+			if (!id) {
+				return json(
+					{
+						error: "No ID provided",
+					},
+					400,
+				);
+			}
+
+			deleteLink.run(id);
+			return new Response("Successfully deleted the link!");
+		}
 	},
 });
 
