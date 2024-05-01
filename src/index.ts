@@ -9,6 +9,7 @@ await db.exec(`
       url VARCHAR(255) NOT NULL
   );
 `);
+
 interface Link {
 	id: string;
 	url: string;
