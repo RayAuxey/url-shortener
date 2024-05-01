@@ -29,3 +29,38 @@ const addLinkSchema = z.object({
 	id: z.string().optional(),
 	url: z.string().url(),
 });
+function generateId() {
+	return Math.random().toString(36).slice(2, 8); // 6 characters
+}
+
+function handler(req: Request) {
+	return {
+		request: req,
+		searchParams: new URL(req.url).searchParams,
+		lastPart: new URL(req.url).pathname.split("/").pop(),
+		endpoint(
+			method: Request["method"],
+			pathname: URL["pathname"],
+			exact = true,
+		) {
+			return (
+				req.method === method &&
+				(exact
+					? new URL(req.url).pathname === pathname
+					: new URL(req.url).pathname.startsWith(pathname))
+			);
+		},
+		json(
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+			response: any,
+			status = 200,
+		) {
+			return new Response(JSON.stringify(response), {
+				headers: {
+					"Content-Type": "application/json",
+				},
+				status,
+			});
+		},
+	};
+}
